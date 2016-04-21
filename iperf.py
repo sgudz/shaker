@@ -32,7 +32,7 @@ def add_common_iperf_params(cmd, executor):
     if executor.test_definition.get('omit'):
         cmd.add('--omit', executor.test_definition.get('omit'))
     if executor.test_definition.get('buffer_size'):
-        cmd.add('--lenght', executor.test_definition.get('buffer_size'))
+        cmd.add('--len', executor.test_definition.get('buffer_size'))
     if executor.test_definition.get('udp'):
         cmd.add('--udp')
         if executor.test_definition.get('bandwidth') is not None:
