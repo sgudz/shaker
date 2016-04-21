@@ -1,3 +1,4 @@
+
 # Copyright (c) 2015 Mirantis Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -25,10 +26,10 @@ LOG = logging.getLogger(__name__)
 
 
 def _filter_none(array):
-    return [x for x in array if x is not None]
+    return [x for x in array if x]
 
 
-def avg(array):
+def mean(array):
     s = _filter_none(array)
     return sum(s) / len(s) if s else 0
 
@@ -61,6 +62,18 @@ def stdev(array):
     print "stdev:", math.sqrt(sqsum/array_size)
     return float("%.9f" % math.sqrt (sqsum / array_size))
 
+def median(array):
+    s = _filter_none(array)
+    srtd = sorted(s) # returns a sorted copy
+    mid = len(s)/2
+    if len(s) % 2 == 0:  # take the avg of middle two
+        return (srtd[mid-1] + srtd[mid]) / 2.0
+    else:
+        return srtd[mid]
+
+
+
+
 class TrafficAggregator(base.BaseAggregator):
     def __init__(self, test_definition):
         super(TrafficAggregator, self).__init__(test_definition)
@@ -68,68 +81,54 @@ class TrafficAggregator(base.BaseAggregator):
     def test_summary(self, records):
         chart = []
         xs = []
-        avg_v = collections.defaultdict(list)
-        units = {}
+        mean_v = collections.defaultdict(list)
 
-        for record in sorted(records, key=lambda x: x['concurrency']):
+        for record in records:
             xs.append(record['concurrency'])
             for k, v in record['stats'].items():
-                avg_v[k].append(v['avg'])
-                units[k] = v['unit']
+                mean_v[k].append(v['mean'])
 
-        chart.append(['concurrency'] + xs)
-        meta = [('concurrency', '')]
+        for k in mean_v.keys():
+            chart.append(['Mean %s' % k] + mean_v[k])
 
-        for k in avg_v.keys():
-            chart.append([k] + avg_v[k])
-            meta.append((k, units[k]))
-
+        chart.append(['x'] + xs)
         return {
             'chart': chart,
-            'meta': meta,
         }
 
     def concurrency_summary(self, records):
         max_v = collections.defaultdict(list)
         min_v = collections.defaultdict(list)
-        avg_v = collections.defaultdict(list)
+        mean_v = collections.defaultdict(list)
         unit_v = dict()
+        chart = []
 
         nodes = []
         for record in records:
             nodes.append(record['node'])
+            chart += record['chart']
 
             for k, v in record['stats'].items():
-                if 'max' in v:
-                    max_v[k].append(v['max'])
-                if 'min' in v:
-                    min_v[k].append(v['min'])
-                if 'avg' in v:
-                    avg_v[k].append(v['avg'])
-                if 'unit' in v:
-                    unit_v[k] = v['unit']
+                max_v[k].append(v['max'])
+                min_v[k].append(v['min'])
+                mean_v[k].append(v['mean'])
+                unit_v[k] = v['unit']
 
         stats = {}
         node_chart = [['x'] + nodes]
 
-        for k in unit_v.keys():
-            stats[k] = dict()
-            title = k
-            if k in unit_v:
-                stats[k]['unit'] = unit_v[k]
-                title += ', ' + unit_v[k]
-            if avg_v[k]:
-                stats[k]['avg'] = avg(avg_v[k])
-                node_chart.append(['Avg %s' % title] + avg_v[k])
-            if max_v[k]:
-                stats[k]['max'] = max(max_v[k])
-                node_chart.append(['Max %s' % title] + max_v[k])
-            if min_v[k]:
-                stats[k]['min'] = min(min_v[k])
-                node_chart.append(['Min %s' % title] + min_v[k])
+        for k in max_v.keys():
+            stats[k] = dict(max=max(max_v[k]),
+                            min=min(min_v[k]),
+                            mean=mean(mean_v[k]),
+                            unit=unit_v[k])
+            node_chart.append(['Mean %s' % k] + mean_v[k])
+            node_chart.append(['Max %s' % k] + max_v[k])
+            node_chart.append(['Min %s' % k] + min_v[k])
 
         return {
             'stats': stats,
+            'x-chart': chart,
             'node_chart': node_chart,
         }
 
@@ -143,7 +142,8 @@ class TrafficAggregator(base.BaseAggregator):
                 item_meta[1] = 'Mbit/s'
 
         # calculate stats
-        record['stats'] = record.get('stats') or dict()
+        record['stats'] = dict()
+        record['chart'] = []
 
         for idx, item_meta in enumerate(record.get('meta', [])):
             column = [row[idx] for row in record.get('samples')]
@@ -153,9 +153,12 @@ class TrafficAggregator(base.BaseAggregator):
                 record['stats'][item_title] = {
                     'max': safe_max(column),
                     'min': safe_min(column),
-                    'avg': avg(column),
+                    'mean': mean(column),
+                    'median': median(column),
                     'unit': item_meta[1],
+                    'stdev': stdev(column)
                 }
+            record['chart'].append([item_title] + column)
 
         # drop stdout
         if 'stdout' in record:
