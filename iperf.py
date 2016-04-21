@@ -29,6 +29,8 @@ def add_common_iperf_params(cmd, executor):
         cmd.add('--set-mss', executor.test_definition.get('mss'))
     if executor.test_definition.get('window'):
         cmd.add('--window', executor.test_definition.get('window'))
+    if executor.test_definition.get('omit'):
+        cmd.add('--omit', executor.test_definition.get('omit'))
     if executor.test_definition.get('buffer_size'):
         cmd.add('--lenght', executor.test_definition.get('buffer_size'))
     if executor.test_definition.get('udp'):
