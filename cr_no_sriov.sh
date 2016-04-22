@@ -1,5 +1,8 @@
 #!/bin/bash
 
+source /root/openrc
+IMAGE_LIST=`nova image-list | grep ACTIVE | awk '{print $4}'`
+
 line="no"
 echo "You can use 'sriov' option for creating sriov nets and ports"
 echo -n "Would you like to create SRIOV ports and net? (yes/no): "
