@@ -46,6 +46,7 @@ fi
 
 
 IMAGE_LIST=`nova image-list | grep ACTIVE | awk '{print $4}'`
+BUSY_SUBNET_LIST=`neutron subnet-list | grep start | awk '{print $6}'`
 FLOATING_ID=`neutron net-list | grep admin_floating_net | awk ' {print $2} '`
 ROUTER_ID=`neutron router-list | grep router04 | awk '{print $2}'`
 FLOATING_IP_1=`nova floating-ip-create | grep '172.16.' | awk '{print $4}'`
@@ -82,7 +83,12 @@ then
 		echo "Using default physnet \"$PHYSNET\" "
 		SRIOV_NET_ID=`neutron net-create --provider:physical_network=$PHYSNET --provider:network_type=vlan $RND-sriov_net | grep '| id' | awk '{print $4}'`
 	fi
-	echo -n "Enter subnet adress. Or it will create default subnet \"192.168.150.0/24\": "
+	echo -n "Enter subnet adress. Or it will create default subnet \"192.168.150.0/24\". "
+	echo "Do NOT use one of this subnet:"
+	for subnets in ${BUSY_SUBNET_LIST[@]}
+	do
+		echo " $subnets"
+	done
 	read SUBNET
 	if [[ $SUBNET != '' ]]
 	then
@@ -135,6 +141,11 @@ then
 	source /root/openrc
 	NET_ID=`neutron net-create $RND-myNet01 | grep '| id' | awk '{print $4}'`
 	echo -n "Enter subnet adress. For example \"192.168.150.0/24\": "
+	echo "Do NOT use one of this subnet:"
+	for subnets in ${BUSY_SUBNET_LIST[@]}
+	do
+		echo " $subnets"
+	done
 	read SUBNET
 		if [[ $SUBNET != '' ]]
 	then
