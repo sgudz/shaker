@@ -54,7 +54,9 @@ do
 	echo ""
 	echo " $image"
 done
+echo ""
 read IMAGE
+echo ""
 echo "Using $IMAGE image. "
 sleep 1
 
@@ -109,10 +111,6 @@ then
 	   #Booting VMs in created ports
 	nova boot --flavor m1.small --image $IMAGE --nic port-id=$SRIOV_PORT_ID_1 $RND-sriov_instance_1 $CMD_ADD
 	nova boot --flavor m1.small --image $IMAGE --nic port-id=$SRIOV_PORT_ID_2 $RND-sriov_instance_2 $CMD_ADD
-	echo "Physnet name - $PHYSNET "
-	echo "Net name - $RND-sriov_net, ID - $SRIOV_NET_ID"
-	echo "$RND-sriov_instance_1 IP is: floating - $FLOATING_IP_1; internal - $IP_PORT_1"
-	echo "$RND-sriov_instance_2 IP is: floating - $FLOATING_IP_2; internal - $IP_PORT_2"
 	sleep 1
 
 	   #Associate floating
@@ -125,6 +123,10 @@ then
 		nova floating-ip-associate $RND-sriov_instance_1 $FLOATING_IP_1
 		nova floating-ip-associate $RND-sriov_instance_2 $FLOATING_IP_2
 	fi
+	echo "Physnet name - $PHYSNET "
+	echo "Net name - $RND-sriov_net, ID - $SRIOV_NET_ID"
+	echo "$RND-sriov_instance_1 IP is: floating - $FLOATING_IP_1; internal - $IP_PORT_1"
+	echo "$RND-sriov_instance_2 IP is: floating - $FLOATING_IP_2; internal - $IP_PORT_2"
 	   #netns params
 #	NETNS=`ip netns show | grep $SRIOV_NET_ID`
 #	ssh-keygen -f "/root/.ssh/known_hosts" -R $IP_PORT_1
@@ -173,16 +175,22 @@ then
 	   #Booting VMs in created ports
 	nova boot --flavor m1.small --image $IMAGE --nic port-id=$PORT_ID_1 $RND-instance_1 $CMD_ADD
 	nova boot --flavor m1.small --image $IMAGE --nic port-id=$PORT_ID_2 $RND-instance_2 $CMD_ADD
+	sleep 1
+
+	   #Associate floating
+	echo -n "Associate floating IP? Default is \"No\". (yes/no): "
+	read associate
+	if [[ $associate == yes ]]
+	then
+		FLOATING_IP_1=`nova floating-ip-create | grep '172.16.' | awk '{print $4}'`
+		FLOATING_IP_2=`nova floating-ip-create | grep '172.16.' | awk '{print $4}'`
+		nova floating-ip-associate $RND-instance_1 $FLOATING_IP_1
+		nova floating-ip-associate $RND-instance_2 $FLOATING_IP_2
+	fi
 	echo "Physnet name - $PHYSNET "
 	echo "Net name - $RND-myNet01, ID - $NET_ID"
 	echo " $RND-instance_1 IP is: floating - $FLOATING_IP_1; internal - $IP_PORT_1"
 	echo " $RND-instance_2 IP is: floating - $FLOATING_IP_2; internal - $IP_PORT_2"
-	sleep 1
-
-	   #Associate floating
-	nova floating-ip-associate $RND-instance_1 $FLOATING_IP_1
-	nova floating-ip-associate $RND-instance_2 $FLOATING_IP_2
-
 	   #netns params
 #	NETNS=`ip netns show | grep $NET_ID`
 #	ssh-keygen -f "/root/.ssh/known_hosts" -R $IP_PORT_1
