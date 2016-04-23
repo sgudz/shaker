@@ -48,9 +48,6 @@ IMAGE_LIST=`nova image-list | grep ACTIVE | awk '{print $4}'`
 BUSY_SUBNET_LIST=`neutron subnet-list | grep start | awk '{print $6}'`
 FLOATING_ID=`neutron net-list | grep admin_floating_net | awk ' {print $2} '`
 ROUTER_ID=`neutron router-list | grep router04 | awk '{print $2}'`
-FLOATING_IP_1=`nova floating-ip-create | grep '172.16.' | awk '{print $4}'`
-FLOATING_IP_2=`nova floating-ip-create | grep '172.16.' | awk '{print $4}'`
-
 echo -n "Enter the name of image. Here is available images: "
 for image in ${IMAGE_LIST[@]}
 do
@@ -119,9 +116,15 @@ then
 	sleep 1
 
 	   #Associate floating
-	nova floating-ip-associate $RND-sriov_instance_1 $FLOATING_IP_1
-	nova floating-ip-associate $RND-sriov_instance_2 $FLOATING_IP_2
-
+	echo -n "Associate floating IP? Default is \"No\". (yes/no): "
+	read associate
+	if [[ $associate == yes ]]
+	then
+		FLOATING_IP_1=`nova floating-ip-create | grep '172.16.' | awk '{print $4}'`
+		FLOATING_IP_2=`nova floating-ip-create | grep '172.16.' | awk '{print $4}'`
+		nova floating-ip-associate $RND-sriov_instance_1 $FLOATING_IP_1
+		nova floating-ip-associate $RND-sriov_instance_2 $FLOATING_IP_2
+	fi
 	   #netns params
 #	NETNS=`ip netns show | grep $SRIOV_NET_ID`
 #	ssh-keygen -f "/root/.ssh/known_hosts" -R $IP_PORT_1
