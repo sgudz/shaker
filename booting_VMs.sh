@@ -48,10 +48,12 @@ fi
 IMAGE_LIST=`nova image-list | grep ACTIVE | awk '{print $4}'`
 FLOATING_ID=`neutron net-list | grep admin_floating_net | awk ' {print $2} '`
 ROUTER_ID=`neutron router-list | grep router04 | awk '{print $2}'`
+FLOATING_IP_1=`nova floating-ip-create | grep '172.16.' | awk '{print $4}'`
+FLOATING_IP_2=`nova floating-ip-create | grep '172.16.' | awk '{print $4}'`
 
 line="no"
-echo "You can use 'sriov' option for creating sriov nets and ports"
-echo -n "Would you like to create SRIOV ports and net? (yes/no): "
+echo "You can use 'SRIOV' option for creating sriov nets and ports."
+echo -n "Create SRIOV ports and net? (yes/no): "
 read line
 
 if [ $line == yes ]
@@ -62,7 +64,6 @@ then
 	source /root/openrc
 	echo -n "Enter physnet name. Or it will be set to default to \"physnet2\": "
 	read PHYSNET
-
 	if [[ $PHYSNET != '' ]]; then
 		echo "Your physnet name is - \"$PHYSNET\" "
 		SRIOV_NET_ID=`neutron net-create --provider:physical_network=$PHYSNET --provider:network_type=vlan $RND-sriov_net | grep '| id' | awk '{print $4}'`
@@ -105,10 +106,10 @@ then
 	sleep 1
 	nova boot --flavor m1.small --image $IMAGE --nic port-id=$SRIOV_PORT_ID_1 $RND-sriov_instance_1 $CMD_ADD
 	nova boot --flavor m1.small --image $IMAGE --nic port-id=$SRIOV_PORT_ID_2 $RND-sriov_instance_2 $CMD_ADD
-	FLOATING_IP_1=`nova floating-ip-create | grep '172.16.' | awk '{print $4}'`
-	FLOATING_IP_2=`nova floating-ip-create | grep '172.16.' | awk '{print $4}'`
-	echo " Subnet - $SUBNET"
-	echo " $PHYSNET "
+	echo "Physnet name - $PHYSNET "
+	echo "Net name - $RND-sriov_net, ID - $SRIOV_NET_ID"
+	echo "$RND-sriov_instance_1 IP is: floating - $FLOATING_IP_1; internal - $IP_PORT_1"
+	echo "$RND-sriov_instance_2 IP is: floating - $FLOATING_IP_2; internal - $IP_PORT_2"
 	sleep 1
 
 	   #Associate floating
@@ -124,6 +125,8 @@ then
 #	ssh -i cloud.key -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ubuntu@172.16.46.184 -t 'iperf3 -c 172.16.46.183 &> report_from_script.txt'
     echo "SRIOV"
 
+	#Creating No-SRIOV VMs
+	
 elif [ $line == no ]
 then 
 	SSH_UB="ubuntu@"
@@ -156,8 +159,10 @@ then
 	   #Booting VMs in created ports
 	nova boot --flavor m1.small --image $IMAGE --nic port-id=$PORT_ID_1 $RND-instance_1 $CMD_ADD
 	nova boot --flavor m1.small --image $IMAGE --nic port-id=$PORT_ID_2 $RND-instance_2 $CMD_ADD
-	FLOATING_IP_1=`nova floating-ip-create | grep '172.16.' | awk '{print $4}'`
-	FLOATING_IP_2=`nova floating-ip-create | grep '172.16.' | awk '{print $4}'`
+	echo "Physnet name - $PHYSNET "
+	echo "Net name - $RND-myNet01, ID - $NET_ID"
+	echo " $RND-instance_1 IP is: floating - $FLOATING_IP_1; internal - $IP_PORT_1"
+	echo " $RND-instance_2 IP is: floating - $FLOATING_IP_2; internal - $IP_PORT_2"
 	sleep 1
 
 	   #Associate floating
