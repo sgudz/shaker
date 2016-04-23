@@ -44,7 +44,6 @@ else
 	export CMD_ADD=""
 fi
 
-
 IMAGE_LIST=`nova image-list | grep ACTIVE | awk '{print $4}'`
 BUSY_SUBNET_LIST=`neutron subnet-list | grep start | awk '{print $6}'`
 FLOATING_ID=`neutron net-list | grep admin_floating_net | awk ' {print $2} '`
