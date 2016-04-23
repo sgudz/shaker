@@ -51,6 +51,16 @@ ROUTER_ID=`neutron router-list | grep router04 | awk '{print $2}'`
 FLOATING_IP_1=`nova floating-ip-create | grep '172.16.' | awk '{print $4}'`
 FLOATING_IP_2=`nova floating-ip-create | grep '172.16.' | awk '{print $4}'`
 
+echo -n "Enter the name of image. Here is available images: "
+for image in ${IMAGE_LIST[@]}
+do
+	echo ""
+	echo " $image"
+done
+read IMAGE
+echo "Using $IMAGE image. "
+sleep 1
+
 line="no"
 echo "You can use 'SRIOV' option for creating sriov nets and ports."
 echo -n "Create SRIOV ports and net? (yes/no): "
@@ -95,15 +105,6 @@ then
 	IP_PORT_2=`neutron port-show $SRIOV_PORT_ID_2 | grep '| fixed_ips' | awk '{ print $7 }' | sed 's/\"//g' | sed 's/^\(.*\).$/\1/'`
 
 	   #Booting VMs in created ports
-	echo -n "Enter the name of image. Here is available images: "
-	for image in ${IMAGE_LIST[@]}
-	do
-		echo ""
-		echo " $image"
-	done
-	read IMAGE
-	echo "Using $IMAGE image. "
-	sleep 1
 	nova boot --flavor m1.small --image $IMAGE --nic port-id=$SRIOV_PORT_ID_1 $RND-sriov_instance_1 $CMD_ADD
 	nova boot --flavor m1.small --image $IMAGE --nic port-id=$SRIOV_PORT_ID_2 $RND-sriov_instance_2 $CMD_ADD
 	echo "Physnet name - $PHYSNET "
