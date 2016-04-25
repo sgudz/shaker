@@ -63,7 +63,9 @@ def stdev(array):
     return float("%.9f" % math.sqrt (sqsum / array_size))
 
 def median(array):
-    s = _filter_none(array)
+    value = None
+    while value in s:
+        s.remove(value)
     srtd = sorted(s) # returns a sorted copy
     mid = len(s)/2
     if len(s) % 2 == 0:  # take the avg of middle two
