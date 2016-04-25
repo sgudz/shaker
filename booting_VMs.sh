@@ -20,8 +20,7 @@ then
 			echo "Key name is - $KEY_NAME "
 			echo "Fingerprint is - $KEY_FINGERPRINT "
 			export CMD_ADD="--key-name $KEY_NAME"
-		elif [[ $answer == "no" ]]
-		then
+		else
 			echo -n "Here is available Keys. Select one of them: "
 			echo ""
 			KEYS=`nova keypair-list | awk '{print $2}' | sed 's/Name//g'`
