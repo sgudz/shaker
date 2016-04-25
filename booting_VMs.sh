@@ -12,7 +12,7 @@ then
 	then
 		echo -n "Create a new keypair? Defaults to \"No\". (yes/no): "
 		read answer
-		if [[ $answer == yes ]]
+		if [[ $answer == "yes" ]]
 		then
 			nova keypair-add $RND\_key > ~/.ssh/webserver_rsa
 			export KEY_NAME=`nova keypair-list | grep $RND\_key | awk '{print $2}'`
@@ -20,7 +20,7 @@ then
 			echo "Key name is - $KEY_NAME "
 			echo "Fingerprint is - $KEY_FINGERPRINT "
 			export CMD_ADD="--key-name $KEY_NAME"
-		elif [[ $answer == no ]]
+		elif [[ $answer == "no" ]]
 		then
 			echo -n "Here is available Keys. Select one of them: "
 			echo ""
