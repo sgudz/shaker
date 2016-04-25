@@ -122,11 +122,16 @@ then
 		FLOATING_IP_2=`nova floating-ip-create | grep '172.16.' | awk '{print $4}'`
 		nova floating-ip-associate $RND-sriov_instance_1 $FLOATING_IP_1
 		nova floating-ip-associate $RND-sriov_instance_2 $FLOATING_IP_2
+		echo "Physnet name - $PHYSNET "
+		echo "Net name - $RND-sriov_net, ID - $SRIOV_NET_ID"
+		echo "$RND-sriov_instance_1 IP is: floating - $FLOATING_IP_1; internal - $IP_PORT_1"
+		echo "$RND-sriov_instance_2 IP is: floating - $FLOATING_IP_2; internal - $IP_PORT_2"
+	else
+		echo "Physnet name - $PHYSNET "
+		echo "Net name - $RND-sriov_net, ID - $SRIOV_NET_ID"
+		echo "$RND-sriov_instance_1 IP is:  $IP_PORT_1"
+		echo "$RND-sriov_instance_2 IP is:  $IP_PORT_2"	
 	fi
-	echo "Physnet name - $PHYSNET "
-	echo "Net name - $RND-sriov_net, ID - $SRIOV_NET_ID"
-	echo "$RND-sriov_instance_1 IP is: floating - $FLOATING_IP_1; internal - $IP_PORT_1"
-	echo "$RND-sriov_instance_2 IP is: floating - $FLOATING_IP_2; internal - $IP_PORT_2"
 	   #netns params
 #	NETNS=`ip netns show | grep $SRIOV_NET_ID`
 #	ssh-keygen -f "/root/.ssh/known_hosts" -R $IP_PORT_1
@@ -186,11 +191,14 @@ then
 		FLOATING_IP_2=`nova floating-ip-create | grep '172.16.' | awk '{print $4}'`
 		nova floating-ip-associate $RND-instance_1 $FLOATING_IP_1
 		nova floating-ip-associate $RND-instance_2 $FLOATING_IP_2
-	fi
-	echo "Physnet name - $PHYSNET "
-	echo "Net name - $RND-myNet01, ID - $NET_ID"
-	echo " $RND-instance_1 IP is: floating - $FLOATING_IP_1; internal - $IP_PORT_1"
-	echo " $RND-instance_2 IP is: floating - $FLOATING_IP_2; internal - $IP_PORT_2"
+		echo "Net name - $RND-myNet01, ID - $NET_ID"
+		echo " $RND-instance_1 IP is: floating - $FLOATING_IP_1; internal - $IP_PORT_1"
+		echo " $RND-instance_2 IP is: floating - $FLOATING_IP_2; internal - $IP_PORT_2"
+	else
+		echo "Net name - $RND-myNet01, ID - $NET_ID"
+		echo " $RND-instance_1 IP is: $IP_PORT_1"
+		echo " $RND-instance_2 IP is: $IP_PORT_2"
+	fi   
 	   #netns params
 #	NETNS=`ip netns show | grep $NET_ID`
 #	ssh-keygen -f "/root/.ssh/known_hosts" -R $IP_PORT_1
