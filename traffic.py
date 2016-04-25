@@ -30,21 +30,33 @@ def _filter_none(array):
 
 
 def mean(array):
-    s = _filter_none(array)
+    s = array
+    value = None
+    while value in s:
+        s.remove(value)
     return sum(s) / len(s) if s else 0
 
 
 def safe_max(array):
-    s = _filter_none(array)
+    s = array
+    value = None
+    while value in s:
+        s.remove(value)
     return max(s) if s else None
 
 
 def safe_min(array):
-    s = _filter_none(array)
+    s = array
+    value = None
+    while value in s:
+        s.remove(value)
     return min(s) if s else None
 
 def stdev(array):
-    s = _filter_none(array)
+    s = array
+    value = None
+    while value in s:
+        s.remove(value)
     print "s:", s
     avg = mean(array)
     print "mean:", avg
@@ -63,6 +75,7 @@ def stdev(array):
     return float("%.9f" % math.sqrt (sqsum / array_size))
 
 def median(array):
+    s = array
     value = None
     while value in s:
         s.remove(value)
