@@ -1,9 +1,7 @@
 title: OpenStack L2 Performance
 
 description:
-  In this scenario Shaker launches 1 pair of instances in the same tenant
-  network. Each instance is hosted on a separate compute node. The traffic goes
-  within the tenant network (L2 domain).
+  This scenario generate traffic bitween compute nodes. Agents starts manualy
 
 deployment:
   template: l2.hot
