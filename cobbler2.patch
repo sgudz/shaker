@@ -1,5 +1,5 @@
---- /usr/lib/python2.7/site-packages/django/conf/global_settings.py	2016-05-30 13:00:14.749756042 +0000
-+++ /usr/lib/python2.7/site-packages/django/conf/global_settings.py	2016-05-31 08:13:34.988663961 +0000
+--- origi/conf/global_settings.py	2016-05-30 13:00:14.749756042 +0000
++++ new/conf/global_settings.py	2016-05-31 08:13:34.988663961 +0000
 @@ -9,8 +9,11 @@
  # CORE             #
  ####################
