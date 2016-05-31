@@ -1,0 +1,16 @@
+--- /usr/lib/python2.7/site-packages/django/conf/global_settings.py	2016-05-30 13:00:14.749756042 +0000
++++ /usr/lib/python2.7/site-packages/django/conf/global_settings.py	2016-05-31 08:13:34.988663961 +0000
+@@ -9,8 +9,11 @@
+ # CORE             #
+ ####################
+ 
+-DEBUG = False
+-TEMPLATE_DEBUG = False
++DEBUG = True
++TEMPLATE_DEBUG = DEBUG
++
++ALLOWED_HOSTS = '*'
++
+ 
+ # Whether the framework should propagate raw exceptions rather than catching
+ # them. This is useful under some testing situations and should never be used
