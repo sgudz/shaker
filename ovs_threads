@@ -1,11 +1,11 @@
 import os
 
 def main():
-    p = []
+    comm = []
     new = []
     res2 = []
-    p = os.popen("ovs-vsctl get Open_vSwitch . other_config")
-    for line in p.readlines():
+    comm = os.popen("ovs-vsctl get Open_vSwitch . other_config")
+    for line in comm.readlines():
         result = str(line).split("0x")[1].split("\"")[0]
         hexa = int(result, 16)
         binar = bin(hexa).split("0b")[1]
