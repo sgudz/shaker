@@ -1,0 +1,18 @@
+import os
+
+def main():
+    p = []
+    new = []
+    res2 = []
+    p = os.popen("ovs-vsctl get Open_vSwitch . other_config")
+    for line in p.readlines():
+        result,a = str(line).split("0x")[1].split("\"")
+        he = int(result, 16)
+        d = bin(he).split("0b")[1]
+        for i in range(len(d)-1,-1,-1):
+                new.append(d[i])
+    for i in range (0,len(new)):
+        if new[i] == "1":
+                res2.append(i)
+    print res2
+main ()
