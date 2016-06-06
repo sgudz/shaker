@@ -11,8 +11,8 @@ def main():
         d = bin(he).split("0b")[1]
         for i in range(len(d)-1,-1,-1):
                 new.append(d[i])
-    for i in range (0,len(new)):
-        if new[i] == "1":
-                res2.append(i)
+    for k in range (0,len(new)):
+        if new[k] == "1":
+                res2.append(k)
     return res2
 print main ()
