@@ -82,7 +82,7 @@ iptables -I INPUT -s 172.16.0.0/16 -j ACCEPT
 iptables -I INPUT -s 192.168.0.0/16 -j ACCEPT
 shaker-image-builder --debug
 echo "SERVER_ENDPOINT: \$SERVER_ENDPOINT:\$SERVER_PORT"
-shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT --scenario /usr/local/lib/python2.7/dist-packages/shaker/scenarios/networking/perf_l2.yaml --report my_HEAT_l2.html --debug
+shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT --scenario /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/perf_l2.yaml --report my_HEAT_l2.html --debug
 EOF
 
 #Run script on remote node and get exit code
