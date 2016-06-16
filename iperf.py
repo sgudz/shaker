@@ -26,7 +26,7 @@ def add_common_iperf_params(cmd, executor):
             executor.agent['slave']['ip'])
     cmd.add('--format', 'm')
     if executor.test_definition.get('mss'):
-        cmd.add('--set-mss', executor.test_definition.get('mss'))
+        cmd.add('--mss', executor.test_definition.get('mss'))
     if executor.test_definition.get('window'):
         cmd.add('--window', executor.test_definition.get('window'))
     if executor.test_definition.get('omit'):
