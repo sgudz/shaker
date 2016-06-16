@@ -21,79 +21,69 @@ execution:
   tests:
   -
     title: TCP_threads_1
-    class: iperf3
-    omit: 30
+    class: iperf
     time: 180
     window: 512K
     buffer_size: 512K
   -
     title: TCP_threads_2
-    class: iperf3
-    omit: 30
+    class: iperf
     time: 180
     threads: 2
     window: 512K
     buffer_size: 512K
   -
     title: TCP_threads_4
-    class: iperf3
-    omit: 30
+    class: iperf
     time: 180
     threads: 4
     window: 512K
     buffer_size: 512K
   -
     title: TCP_threads_6
-    class: iperf3
-    omit: 30
+    class: iperf
     time: 180
     threads: 6
     window: 512K
     buffer_size: 512K
   -
     title: TCP_threads_8
-    class: iperf3
-    omit: 30
+    class: iperf
     time: 180
     threads: 8
     window: 512K
     buffer_size: 512K
   -
     title: TCP_threads_12
-    class: iperf3
-    omit: 30
+    class: iperf
     time: 180
     threads: 12
     window: 512K
     buffer_size: 512K
   -
     title: TCP_threads_16
-    class: iperf3
-    omit: 30
+    class: iperf
     time: 180
     threads: 16
     window: 512K
     buffer_size: 512K
   -
     title: TCP_threads_24
-    class: iperf3
-    omit: 30
+    class: iperf
     time: 180
     threads: 24
     window: 512K
     buffer_size: 512K
   -
     title: TCP_threads_28
-    class: iperf3
-    omit: 30
+    class: iperf
     time: 180
     threads: 28
     window: 512K
     buffer_size: 512K
   -
     title: TCP_threads_32
-    class: iperf3
-    omit: 30
+    class: iperf
     time: 180
     threads: 32
     window: 512K
