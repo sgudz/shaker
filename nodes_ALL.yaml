@@ -21,7 +21,7 @@ execution:
   tests:
   -
     title: TCP_threads_1
-    class: iperf
+    class: iperf_graph
     time: 30
     threads: 8
     window: 512K
