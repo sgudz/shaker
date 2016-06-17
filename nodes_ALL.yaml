@@ -8,7 +8,7 @@ deployment:
   agents:
   -
     id: a-001
-    ip: 192.168.1.2
+    ip: 192.168.1.222
     mode: master
     slave_id: a-002
   -
