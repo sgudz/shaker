@@ -23,5 +23,6 @@ execution:
     title: TCP_threads_1
     class: iperf
     time: 30
+    threads: 8
     window: 512K
     buffer_size: 512K
