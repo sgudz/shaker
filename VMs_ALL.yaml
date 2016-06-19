@@ -11,8 +11,30 @@ execution:
   tests:
   -
     title: TCP_threads_1
-    class: iperf
+    class: iperf_graph
+    time: 180
+  -
+    title: TCP_threads_4
+    class: iperf_graph
+    time: 180
+    threads: 4
+  -
+    title: TCP_threads_8
+    class: iperf_graph
+    time: 180
     threads: 8
-    time: 30
-    window: 512K
-    buffer_size: 512K
+  -
+    title: TCP_threads_16
+    class: iperf_graph
+    time: 180
+    threads: 16
+  -
+    title: TCP_threads_24
+    class: iperf_graph
+    time: 180
+    threads: 24
+  -
+    title: TCP_threads_32
+    class: iperf_graph
+    time: 180
+    threads: 32
