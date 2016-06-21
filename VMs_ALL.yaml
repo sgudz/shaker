@@ -1,7 +1,7 @@
 title: OpenStack L2 Performance
 
 description:
-  This scenario generate traffic bitween compute nodes. Agents starts manualy
+  This scenario run test between 2 VMs on separate nodes
 
 deployment:
   template: l2.hot
