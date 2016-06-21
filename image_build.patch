@@ -1,0 +1,11 @@
+--- a/image_builder.py	2016-06-21 12:43:51.153007541 +0000
++++ b/image_builder.py	2016-06-21 12:47:05.938717163 +0000
+@@ -62,7 +62,7 @@
+     else:
+         try:
+             nova.create_flavor(openstack_client.nova, name=flavor_name,
+-                               ram=4096, vcpus=8, disk=40)
++                               ram=512, vcpus=1, disk=3)
+             LOG.info('Created flavor %s', flavor_name)
+         except nova.ForbiddenException:
+             LOG.error('User does not have permissions to create the flavor. '
