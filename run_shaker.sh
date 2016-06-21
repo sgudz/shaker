@@ -42,6 +42,7 @@ shaker-image-builder --debug
 ################################## Changing flavor for shaker from 1 vCPU and 512M to 8 vCPU 4096M ####################################
 nova flavor-delete shaker-flavor
 nova flavor-create shaker-flavor auto 4096 40 8
+#Copy orig traffic.py
 cp /usr/local/lib/python2.7/dist-packages/shaker/engine/aggregators/traffic.py /usr/local/lib/python2.7/dist-packages/shaker/engine/aggregators/traffic.py.orig
 EOF
 #Run script on remote node
