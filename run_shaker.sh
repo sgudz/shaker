@@ -41,9 +41,9 @@ apt-get -y install iperf python-dev libzmq-dev python-pip && pip install pbr pys
 
 ##### Patching file to create flavor with 8 vCPU and 4096M #####################
 echo "Patching file to create flavor with 8 vCPU and 4096M #####################
-ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/image_build.patch' | patch -b -d /usr/local/lib/python2.7/dist-packages/shaker/engine/ -p1"
-sleep 4
-shaker-image-builder --debug
+#ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/image_build.patch' | patch -b -d /usr/local/lib/python2.7/dist-packages/shaker/engine/ -p1"
+#sleep 4
+#shaker-image-builder --debug
 
 ################################## Changing flavor for shaker from 1 vCPU and 512M to 8 vCPU 4096M ####################################
 #Copy orig traffic.py
