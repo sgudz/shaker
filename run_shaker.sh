@@ -10,7 +10,7 @@ curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/VMs_ALL.yaml'
 
 #Define global variables
 #Define SSH template:
-export SSH_OPTS='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=quiet'
+export SSH_OPTS='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR'
 #USER_NAME=root
 CONTROLLER_ADMIN_IP=`fuel node | grep controller | awk -F "|" '{print $5}' | sed 's/ //g'`
 
@@ -109,7 +109,7 @@ ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT3}" <<EOF
 source /root/openrc
 SERVER_ENDPOINT=$CONTROLLER_PUBLIC_IP
 SERVER_PORT=18000
-shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT --scenario /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/VMs.yaml --report VMs_$DATE.html --debug
+shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT --scenario /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/VMs.yaml --report VMs_build-$BUILD-$DATE.html --debug
 EOF
 ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT3}"
 
@@ -121,7 +121,7 @@ source /root/openrc
 SERVER_ENDPOINT=$CONTROLLER_PUBLIC_IP
 SERVER_PORT2=19000
 echo "SERVER_ENDPOINT: \$SERVER_ENDPOINT:\$SERVER_PORT"
-shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT2 --scenario /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml --report nodes_$DATE.html --debug
+shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT2 --scenario /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml --report nodes_build-$BUILD-$DATE.html --debug
 EOF
 ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT4}"
 
@@ -132,5 +132,5 @@ for proc in ${COMPUTE_IP_ARRAY[@]};do
 	ssh ${SSH_OPTS} $proc "ps -ef | grep shaker | awk '{print \$2}' | xargs kill"
 done
 export BUILD=`cat /etc/fuel_build_id`
-scp $CONTROLLER_ADMIN_IP:~/VMs_$DATE.html ~/VMs_build_${BUILD}_$DATE.html
-scp $CONTROLLER_ADMIN_IP:~/nodes_$DATE.html ~/nodes_build_${BUILD}_$DATE.html
+scp $CONTROLLER_ADMIN_IP:~/VMs_$DATE.html ~/VMs_build-$BUILD-$DATE.html
+scp $CONTROLLER_ADMIN_IP:~/nodes_$DATE.html ~/nodes_build-$BUILD-$DATE.html
