@@ -1,0 +1,15 @@
+title: OpenStack L2 Performance
+
+description:
+  This scenario generate traffic bitween compute nodes. Agents starts manualy
+
+deployment:
+  template: l2.hot
+  accommodation: [pair, single_room, compute_nodes: 2]
+
+execution:
+  tests:
+  -
+    title: TCP_threads_1
+    class: iperf_graph
+    time: 15
