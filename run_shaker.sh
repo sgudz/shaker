@@ -41,6 +41,7 @@ iptables -I INPUT -s 192.168.0.0/16 -j ACCEPT
 
 ##### Patching file to create flavor with 8 vCPU and 4096M #####################
 curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/image_build.patch' | patch -b -d /usr/local/lib/python2.7/dist-packages/shaker/engine/ -p1
+sleep 4
 shaker-image-builder --debug
 
 ################################## Changing flavor for shaker from 1 vCPU and 512M to 8 vCPU 4096M ####################################
