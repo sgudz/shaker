@@ -22,8 +22,7 @@ echo "Compute IPs:"
 for i in ${COMPUTE_IP_ARRAY[@]};do echo $i;done
 
 # Update traffic.py file to have stdev and median values in the report
-#wget -nc https://raw.githubusercontent.com/esboych/Openstack-Scripts/master/SHAKER_LAUNCH_AUTOMATION/traffic.py
-#scp traffic.py root@$CONTROLLER_ADMIN_IP:/root/traffic.py
+curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/traffic.py' > traffic.py
 
 ##################################### Run Shaker on Controller ########################################################################
 
@@ -52,7 +51,7 @@ ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT}"
 
 scp nodes.yaml $CONTROLLER_ADMIN_IP:/usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/
 scp VMs.yaml $CONTROLLER_ADMIN_IP:/usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/
-
+scp traffic.py $CONTROLLER_ADMIN_IP:/usr/local/lib/python2.7/dist-packages/shaker/engine/aggregators/traffic.py
 ##################################### Install Shaker on computes #########################################################################
 
 echo "Install Shaker on Computes and launch local agents"
