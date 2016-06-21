@@ -39,6 +39,7 @@ iptables -I INPUT -s 10.0.0.0/16 -j ACCEPT
 iptables -I INPUT -s 172.16.0.0/16 -j ACCEPT
 iptables -I INPUT -s 192.168.0.0/16 -j ACCEPT
 shaker-image-builder --debug
+################################## Changing flavor for shaker from 1 vCPU and 512M to 8 vCPU 4096M ####################################
 nova flavor-delete shaker-flavor
 nova flavor-create shaker-flavor auto 4096 40 8
 cp /usr/local/lib/python2.7/dist-packages/shaker/engine/aggregators/traffic.py /usr/local/lib/python2.7/dist-packages/shaker/engine/aggregators/traffic.py.orig
