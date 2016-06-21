@@ -1,6 +1,7 @@
 #!/bin/bash
 #set -x
 #This script should be run from the Master node in order to install and launch Shaker
+#This script tests "storage" network for test between nodes. You can change network by replacing NETWORK parameter.
 export DATE=`date +%Y-%m-%d_%H:%M`
 
 ####################### Catching scenarios ##############################################################################################
