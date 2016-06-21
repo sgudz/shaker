@@ -40,7 +40,7 @@ iptables -I INPUT -s 172.16.0.0/16 -j ACCEPT
 iptables -I INPUT -s 192.168.0.0/16 -j ACCEPT
 
 ##### Patching file to create flavor with 8 vCPU and 4096M #####################
-curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/image_build.patch' | patch -b -d /usr/local/lib/python2.7/dist-packages/shaker/engine/ -p1
+ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/image_build.patch' | patch -b -d /usr/local/lib/python2.7/dist-packages/shaker/engine/ -p1"
 sleep 4
 shaker-image-builder --debug
 
