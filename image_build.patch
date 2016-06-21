@@ -4,8 +4,8 @@
      else:
          try:
              nova.create_flavor(openstack_client.nova, name=flavor_name,
--                               ram=4096, vcpus=8, disk=40)
-+                               ram=512, vcpus=1, disk=3)
+-                               ram=512, vcpus=1, disk=3)
++                               ram=4096, vcpus=8, disk=40)
              LOG.info('Created flavor %s', flavor_name)
          except nova.ForbiddenException:
              LOG.error('User does not have permissions to create the flavor. '
