@@ -132,5 +132,5 @@ for proc in ${COMPUTE_IP_ARRAY[@]};do
 	ssh ${SSH_OPTS} $proc "ps -ef | grep shaker | awk '{print \$2}' | xargs kill"
 done
 export BUILD=`cat /etc/fuel_build_id`
-scp $CONTROLLER_ADMIN_IP:/root/VMs_$DATE.html ~/VMs_build-$BUILD\-$DATE.html
-scp $CONTROLLER_ADMIN_IP:/root/nodes_$DATE.html ~/nodes_build-$BUILD\-$DATE.html
+scp $CONTROLLER_ADMIN_IP:/root/VMs_$DATE.html /root/VMs_build\-$BUILD\-$DATE.html
+scp $CONTROLLER_ADMIN_IP:/root/nodes_$DATE.html /root/nodes_build\-$BUILD\-$DATE.html
