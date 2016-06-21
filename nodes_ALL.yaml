@@ -1,7 +1,7 @@
 title: OpenStack L2 Performance
 
 description:
-  This scenario tests network on different
+  This scenario tests network between different
   compute nodes.
 
 deployment:
