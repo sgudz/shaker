@@ -28,7 +28,7 @@ echo "Install Shaker on Controller"
 REMOTE_SCRIPT=`ssh $CONTROLLER_ADMIN_IP "mktemp"`
 ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT}" <<EOF
 #set -x
-curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/openrc.patch' | patch /root/openrc
+curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/openrc.patch' | patch -f /root/openrc
 source /root/openrc
 SERVER_ENDPOINT=$CONTROLLER_PUBLIC_IP
 echo "SERVER_ENDPOINT: \$SERVER_ENDPOINT:\$SERVER_PORT"
