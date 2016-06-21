@@ -9,7 +9,7 @@ curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/nodes_ALL.yam
 curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/VMs_ALL.yaml' > VMs.yaml
 
 #Define SSH template:
-export SSH_OPTS='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR'
+export SSH_OPTS='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=quiet'
 CONTROLLER_ADMIN_IP=`fuel node | grep controller | awk -F "|" '{print $5}' | sed 's/ //g'`
 
 export CONTROLLER_PUBLIC_IP=$(ssh ${CONTROLLER_ADMIN_IP} "ifconfig | grep br-ex -A 1 | grep inet | awk ' {print \$2}' | sed 's/addr://g'")
@@ -30,20 +30,20 @@ ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT}" <<EOF
 #set -x
 source /root/openrc
 SERVER_ENDPOINT=$CONTROLLER_PUBLIC_IP
-#echo "SERVER_ENDPOINT: \$SERVER_ENDPOINT:\$SERVER_PORT"
+echo "SERVER_ENDPOINT: \$SERVER_ENDPOINT:\$SERVER_PORT"
 printf 'deb http://ua.archive.ubuntu.com/ubuntu/ trusty universe' > /etc/apt/sources.list
 apt-get update
 apt-get -y install iperf python-dev libzmq-dev python-pip && pip install pbr pyshaker
 #iptables -I INPUT -s 10.20.0.0/16 -j ACCEPT
 #iptables -I INPUT -s 10.0.0.0/16 -j ACCEPT
 #iptables -I INPUT -s 172.16.0.0/16 -j ACCEPT
-#iptables -I INPUT -s 192.168.0.0/16 -j ACCEPT
+iptables -I INPUT -s 192.168.0.0/16 -j ACCEPT
 
 ##### Patching file to create flavor with 8 vCPU and 4096M #####################
 echo "Patching file to create flavor with 8 vCPU and 4096M #####################
-#ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/image_build.patch' | patch -b -d /usr/local/lib/python2.7/dist-packages/shaker/engine/ -p1"
-#sleep 4
-#shaker-image-builder --debug
+curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/image_build.patch' | patch -b -d /usr/local/lib/python2.7/dist-packages/shaker/engine/ -p1
+sleep 4
+shaker-image-builder --debug
 
 ################################## Changing flavor for shaker from 1 vCPU and 512M to 8 vCPU 4096M ####################################
 #Copy orig traffic.py
@@ -71,7 +71,7 @@ apt-get -y install iperf python-dev libzmq-dev python-pip && pip install pbr pys
 #iptables -I INPUT -s 10.20.0.0/16 -j ACCEPT
 #iptables -I INPUT -s 10.0.0.0/16 -j ACCEPT
 #iptables -I INPUT -s 172.16.0.0/16 -j ACCEPT
-#iptables -I INPUT -s 192.168.0.0/16 -j ACCEPT
+iptables -I INPUT -s 192.168.0.0/16 -j ACCEPT
 EOF
 	ssh ${SSH_OPTS} $item "bash ${REMOTE_SCRIPT2}"
 	agent_id="a-00$cnt"
@@ -117,17 +117,17 @@ shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT --scenario /usr/local/l
 EOF
 ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT3}"
 
-# echo "Run scenarios for Nodes"
-# REMOTE_SCRIPT4=`ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "mktemp"`
-# ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT4}" <<EOF
-# #set -x
-# source /root/openrc
-# SERVER_ENDPOINT=$CONTROLLER_PUBLIC_IP
-# SERVER_PORT2=19000
-# echo "SERVER_ENDPOINT: \$SERVER_ENDPOINT:\$SERVER_PORT"
-# shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT2 --scenario /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml --report nodes_$DATE.html --debug
-# EOF
-# ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT4}"
+echo "Run scenarios for Nodes"
+REMOTE_SCRIPT4=`ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "mktemp"`
+ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT4}" <<EOF
+#set -x
+source /root/openrc
+SERVER_ENDPOINT=$CONTROLLER_PUBLIC_IP
+SERVER_PORT2=19000
+echo "SERVER_ENDPOINT: \$SERVER_ENDPOINT:\$SERVER_PORT"
+shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT2 --scenario /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml --report nodes_$DATE.html --debug
+EOF
+ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT4}"
 
 ##################### Cleaning after nodes testing ########################################
 for proc in ${COMPUTE_IP_ARRAY[@]};do
