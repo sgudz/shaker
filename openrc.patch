@@ -1,0 +1,11 @@
+--- a/openrc      2016-06-21 16:26:13.253700422 +0000
++++ b/openrc     2016-06-21 16:32:33.171467995 +0000
+@@ -4,7 +4,7 @@
+ export OS_PROJECT_NAME='admin'
+ export OS_USERNAME='admin'
+ export OS_PASSWORD='admin'
+-export OS_AUTH_URL='http://192.168.0.2:5000/'
++export OS_AUTH_URL='http://192.168.0.2:5000/v2.0/'
+ export OS_DEFAULT_DOMAIN='Default'
+ export OS_AUTH_STRATEGY='keystone'
+ export OS_REGION_NAME='RegionOne'
