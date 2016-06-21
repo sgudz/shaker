@@ -1,0 +1,25 @@
+title: OpenStack L2 Performance
+
+description:
+  This scenario tests network on different
+  compute nodes.
+
+deployment:
+  agents:
+  -
+    id: a-001
+    ip: 192.168.1.222
+    mode: master
+    slave_id: a-002
+  -
+    id: a-002
+    ip: 192.168.1.111
+    mode: slave
+    master_id: a-001
+
+execution:
+  tests:
+  -
+    title: TCP_threads_1
+    class: iperf_graph
+    time: 15
