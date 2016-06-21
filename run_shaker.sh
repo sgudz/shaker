@@ -9,7 +9,6 @@ curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/VMs_ALL.yaml'
 
 #Define SSH template:
 export SSH_OPTS='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR'
-#USER_NAME=root
 CONTROLLER_ADMIN_IP=`fuel node | grep controller | awk -F "|" '{print $5}' | sed 's/ //g'`
 
 export CONTROLLER_PUBLIC_IP=$(ssh ${CONTROLLER_ADMIN_IP} "ifconfig | grep br-ex -A 1 | grep inet | awk ' {print \$2}' | sed 's/addr://g'")
@@ -24,7 +23,7 @@ curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/traffic.py' >
 
 ##################################### Run Shaker on Controller ########################################################################
 
-#echo "Install Shaker on Controller"
+echo "Install Shaker on Controller"
 REMOTE_SCRIPT=`ssh $CONTROLLER_ADMIN_IP "mktemp"`
 ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT}" <<EOF
 #set -x
@@ -47,7 +46,7 @@ EOF
 ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT}"
 
 ##################################### Copying scenarios to right directory ##############################################################
-
+echo "Copying required files to specific directories"
 scp nodes.yaml $CONTROLLER_ADMIN_IP:/usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/
 scp VMs.yaml $CONTROLLER_ADMIN_IP:/usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/
 scp traffic.py $CONTROLLER_ADMIN_IP:/usr/local/lib/python2.7/dist-packages/shaker/engine/aggregators/traffic.py
@@ -76,14 +75,14 @@ EOF
 
 	if test $agent_id == "a-001";then
 		role="master"
-		ip=`ssh ${SSH_OPTS} $item ifconfig | grep "192.168.1" | awk -F ":" '{print $2}' | awk -F " " '{print $1}'`
+		ip=`ssh ${SSH_OPTS} $item ifconfig | grep "192.168.1." | awk -F ":" '{print $2}' | awk -F " " '{print $1}'`
 		FOR_SED="ip: $ip"
 		MASTER_IP=`ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "sed -n '11p;11q' /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml | sed 's/    //g'"`
 		ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "sed -i 's/${MASTER_IP}/${FOR_SED}/g' /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml"
 		ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP cat /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml | head -n 13
 	else
 		role="slave"
-		ip=`ssh ${SSH_OPTS} $item ifconfig | grep "192.168.1" | awk -F ":" '{print $2}' | awk -F " " '{print $1}'`
+		ip=`ssh ${SSH_OPTS} $item ifconfig | grep "192.168.1." | awk -F ":" '{print $2}' | awk -F " " '{print $1}'`
 		FOR_SED="ip: $ip"
 		SLAVE_IP=`ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "sed -n '16p;16q' /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml | sed 's/    //g'"`
 		ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "sed -i 's/${SLAVE_IP}/${FOR_SED}/g' /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml"
@@ -133,3 +132,4 @@ done
 export BUILD=`cat /etc/fuel_build_id`
 scp $CONTROLLER_ADMIN_IP:/root/VMs_$DATE.html /root/VMs_build\-$BUILD\-$DATE.html
 scp $CONTROLLER_ADMIN_IP:/root/nodes_$DATE.html /root/nodes_build\-$BUILD\-$DATE.html
+echo "Done."
