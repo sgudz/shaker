@@ -38,10 +38,12 @@ iptables -I INPUT -s 10.20.0.0/16 -j ACCEPT
 iptables -I INPUT -s 10.0.0.0/16 -j ACCEPT
 iptables -I INPUT -s 172.16.0.0/16 -j ACCEPT
 iptables -I INPUT -s 192.168.0.0/16 -j ACCEPT
+
+##### Patching file to create flavor with 8 vCPU and 4096M #####################
+curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/image_build.patch' | patch -b -d /usr/local/lib/python2.7/dist-packages/shaker/engine/ -p1
 shaker-image-builder --debug
+
 ################################## Changing flavor for shaker from 1 vCPU and 512M to 8 vCPU 4096M ####################################
-#nova flavor-delete shaker-flavor
-#nova flavor-create shaker-flavor auto 4096 40 8
 #Copy orig traffic.py
 cp /usr/local/lib/python2.7/dist-packages/shaker/engine/aggregators/traffic.py /usr/local/lib/python2.7/dist-packages/shaker/engine/aggregators/traffic.py.orig
 EOF
@@ -113,17 +115,17 @@ shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT --scenario /usr/local/l
 EOF
 ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT3}"
 
-echo "Run scenarios for Nodes"
-REMOTE_SCRIPT4=`ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "mktemp"`
-ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT4}" <<EOF
-#set -x
-source /root/openrc
-SERVER_ENDPOINT=$CONTROLLER_PUBLIC_IP
-SERVER_PORT2=19000
-echo "SERVER_ENDPOINT: \$SERVER_ENDPOINT:\$SERVER_PORT"
-shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT2 --scenario /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml --report nodes_$DATE.html --debug
-EOF
-ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT4}"
+# echo "Run scenarios for Nodes"
+# REMOTE_SCRIPT4=`ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "mktemp"`
+# ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT4}" <<EOF
+# #set -x
+# source /root/openrc
+# SERVER_ENDPOINT=$CONTROLLER_PUBLIC_IP
+# SERVER_PORT2=19000
+# echo "SERVER_ENDPOINT: \$SERVER_ENDPOINT:\$SERVER_PORT"
+# shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT2 --scenario /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml --report nodes_$DATE.html --debug
+# EOF
+# ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT4}"
 
 ##################### Cleaning after nodes testing ########################################
 for proc in ${COMPUTE_IP_ARRAY[@]};do
