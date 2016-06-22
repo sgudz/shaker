@@ -14,20 +14,10 @@ execution:
     class: iperf_graph
     time: 180
   -
-    title: TCP_threads_4
-    class: iperf_graph
-    time: 180
-    threads: 4
-  -
     title: TCP_threads_8
     class: iperf_graph
     time: 180
     threads: 8
-  -
-    title: TCP_threads_16
-    class: iperf_graph
-    time: 180
-    threads: 16
   -
     title: TCP_threads_22
     class: iperf_graph
@@ -38,18 +28,3 @@ execution:
     class: iperf_graph
     time: 180
     threads: 32
-  -
-    title: TCP_threads_2
-    class: iperf_graph
-    time: 180
-    threads: 2
-  -
-    title: TCP_threads_12
-    class: iperf_graph
-    time: 180
-    threads: 12
-  -
-    title: TCP_threads_28
-    class: iperf_graph
-    time: 180
-    threads: 28
