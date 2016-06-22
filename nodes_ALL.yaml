@@ -8,12 +8,12 @@ deployment:
   agents:
   -
     id: a-001
-    ip: 192.168.1.222
+    ip: 192.168.1.3
     mode: master
     slave_id: a-002
   -
     id: a-002
-    ip: 192.168.1.111
+    ip: 192.168.1.2
     mode: slave
     master_id: a-001
 
@@ -39,10 +39,10 @@ execution:
     time: 180
     threads: 16
   -
-    title: TCP_threads_24
+    title: TCP_threads_22
     class: iperf_graph
     time: 180
-    threads: 24
+    threads: 22
   -
     title: TCP_threads_32
     class: iperf_graph
