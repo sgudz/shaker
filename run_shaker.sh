@@ -27,7 +27,14 @@ echo "Install Shaker on Controller"
 REMOTE_SCRIPT=`ssh $CONTROLLER_ADMIN_IP "mktemp"`
 ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT}" <<EOF
 #set -x
-curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/openrc.patch' | patch -f /root/openrc
+
+######## Changing OPENRC if need ################
+NEED="export OS_AUTH_URL='http://192.168.0.2:5000/v2.0/'"
+EXIST=`awk '(NR == 7)' openrc`
+if [[ ${NEED} != ${EXIST} ]]; then
+sed -i 's/5000\//5000\/v2.0\//g' openrc
+fi
+
 source /root/openrc
 SERVER_ENDPOINT=$CONTROLLER_PUBLIC_IP
 echo "SERVER_ENDPOINT: \$SERVER_ENDPOINT:\$SERVER_PORT"
