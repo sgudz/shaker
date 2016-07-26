@@ -20,21 +20,7 @@ deployment:
 execution:
   tests:
   -
-    title: TCP_threads_1
-    class: iperf_graph
-    time: 180
-  -
     title: TCP_threads_8
     class: iperf_graph
     time: 180
     threads: 8
-  -
-    title: TCP_threads_22
-    class: iperf_graph
-    time: 180
-    threads: 22
-  -
-    title: TCP_threads_32
-    class: iperf_graph
-    time: 180
-    threads: 32
