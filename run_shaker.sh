@@ -8,13 +8,13 @@ export DATE=`date +%Y-%m-%d_%H:%M`
 curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/nodes_ALL.yaml' > nodes.yaml
 curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/VMs_ALL.yaml' > VMs.yaml
 
-#Define SSH template:
 export SSH_OPTS='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=quiet'
 CONTROLLER_ADMIN_IP=`fuel node | grep controller | awk -F "|" '{print $5}' | sed 's/ //g'`
 
 export CONTROLLER_PUBLIC_IP=$(ssh ${CONTROLLER_ADMIN_IP} "ifconfig | grep br-ex -A 1 | grep inet | awk ' {print \$2}' | sed 's/addr://g'")
 echo "Controller Public IP: $CONTROLLER_PUBLIC_IP"
-#Define 2 computes IPs
+
+#Define 2 computes IPs for testing between nodes
 COMPUTE_IP_ARRAY=`fuel node | awk -F "|" '/compute/ {print $5}' | sed 's/ //g' | head -n 2`
 echo "Compute IPs:"
 for i in ${COMPUTE_IP_ARRAY[@]};do echo $i;done
@@ -23,7 +23,6 @@ for i in ${COMPUTE_IP_ARRAY[@]};do echo $i;done
 curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/traffic.py' > traffic.py
 
 ##################################### Run Shaker on Controller ########################################################################
-
 echo "Install Shaker on Controller"
 REMOTE_SCRIPT=`ssh $CONTROLLER_ADMIN_IP "mktemp"`
 ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT}" <<EOF
