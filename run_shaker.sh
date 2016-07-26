@@ -41,7 +41,7 @@ apt-get -y install iperf python-dev libzmq-dev python-pip && pip install pbr pys
 iptables -I INPUT -s 192.168.0.0/16 -j ACCEPT
 
 ##### Patching file to create flavor with 8 vCPU and 4096M #####################
-echo "Patching file to create flavor with 8 vCPU and 4096M #####################
+echo "Patching file to create flavor with 8 vCPU and 4096M #####################"
 curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/image_build.patch' | patch -b -d /usr/local/lib/python2.7/dist-packages/shaker/engine/ -p1
 sleep 4
 shaker-image-builder --debug
