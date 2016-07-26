@@ -35,9 +35,9 @@ echo "SERVER_ENDPOINT: \$SERVER_ENDPOINT:\$SERVER_PORT"
 printf 'deb http://ua.archive.ubuntu.com/ubuntu/ trusty universe' > /etc/apt/sources.list
 apt-get update
 apt-get -y install iperf python-dev libzmq-dev python-pip && pip install pbr pyshaker
-#iptables -I INPUT -s 10.20.0.0/16 -j ACCEPT
-#iptables -I INPUT -s 10.0.0.0/16 -j ACCEPT
-#iptables -I INPUT -s 172.16.0.0/16 -j ACCEPT
+iptables -I INPUT -s 10.20.0.0/16 -j ACCEPT
+iptables -I INPUT -s 10.0.0.0/16 -j ACCEPT
+iptables -I INPUT -s 172.16.0.0/16 -j ACCEPT
 iptables -I INPUT -s 192.168.0.0/16 -j ACCEPT
 
 ##### Patching file to create flavor with 8 vCPU and 4096M #####################
@@ -59,7 +59,7 @@ scp nodes.yaml $CONTROLLER_ADMIN_IP:/usr/local/lib/python2.7/dist-packages/shake
 scp VMs.yaml $CONTROLLER_ADMIN_IP:/usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/
 scp traffic.py $CONTROLLER_ADMIN_IP:/usr/local/lib/python2.7/dist-packages/shaker/engine/aggregators/traffic.py
 ##################################### Install Shaker on computes #########################################################################
-sleep 600
+sleep 5
 echo "Install Shaker on Computes and launch local agents"
 cnt="1"
 for item in ${COMPUTE_IP_ARRAY[@]};do
@@ -69,9 +69,9 @@ for item in ${COMPUTE_IP_ARRAY[@]};do
 printf 'deb http://ua.archive.ubuntu.com/ubuntu/ trusty universe' > /etc/apt/sources.list
 apt-get update
 apt-get -y install iperf python-dev libzmq-dev python-pip && pip install pbr pyshaker
-#iptables -I INPUT -s 10.20.0.0/16 -j ACCEPT
-#iptables -I INPUT -s 10.0.0.0/16 -j ACCEPT
-#iptables -I INPUT -s 172.16.0.0/16 -j ACCEPT
+iptables -I INPUT -s 10.20.0.0/16 -j ACCEPT
+iptables -I INPUT -s 10.0.0.0/16 -j ACCEPT
+iptables -I INPUT -s 172.16.0.0/16 -j ACCEPT
 iptables -I INPUT -s 192.168.0.0/16 -j ACCEPT
 EOF
 	ssh ${SSH_OPTS} $item "bash ${REMOTE_SCRIPT2}"
