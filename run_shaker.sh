@@ -5,8 +5,8 @@
 export DATE=`date +%Y-%m-%d_%H:%M`
 
 ####################### Catching scenarios ##############################################################################################
-curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/nodes_ALL.yaml' > nodes.yaml
-curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/VMs_ALL.yaml' > VMs.yaml
+curl -s 'http://172.16.44.5/for_workarounds/shaker_scenario_for_perf_labs/nodes.yaml' > nodes.yaml
+curl -s 'http://172.16.44.5/for_workarounds/shaker_scenario_for_perf_labs/VMs.yaml' > VMs.yaml
 
 export SSH_OPTS='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=quiet'
 CONTROLLER_ADMIN_IP=`fuel node | grep controller | awk -F "|" '{print $5}' | sed 's/ //g'`
