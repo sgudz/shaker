@@ -143,4 +143,8 @@ done
 export BUILD=`cat /etc/fuel_build_id`
 scp $CONTROLLER_ADMIN_IP:/root/VMs_$DATE.html /root/VMs_build\-$BUILD\-$DATE.html
 scp $CONTROLLER_ADMIN_IP:/root/nodes_$DATE.html /root/nodes_build\-$BUILD\-$DATE.html
+DATA_NODES=$(grep -Po '"median":.*?[^\\]",' /root/nodes_build\-$BUILD\-$DATE.html | sed 's/\,\ \"unit\"\:\ \"Mbit\/s\"\,$//')
+DATA_VM=$(grep -Po '"median":.*?[^\\]",' /root/VMs_build\-$BUILD\-$DATE.html | sed 's/\,\ \"unit\"\:\ \"Mbit\/s\"\,$//')
+echo $DATA_NODES
+echo $DATA_VM
 echo "Done."
