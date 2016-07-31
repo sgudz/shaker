@@ -144,8 +144,8 @@ export BUILD=`cat /etc/fuel_build_id`
 scp $CONTROLLER_ADMIN_IP:/root/VMs_$DATE.html /root/VMs_build\-$BUILD\-$DATE.html
 scp $CONTROLLER_ADMIN_IP:/root/nodes_$DATE.html /root/nodes_build\-$BUILD\-$DATE.html
 CUSTOM_THROUGHPUT_NODES=$(grep -Po '"median":.*?[^\\]",' /root/nodes_build\-$BUILD\-$DATE.html | sed 's/\,\ \"unit\"\:\ \"Mbit\/s\"\,$//' | grep -Eo "[0-9]*" | awk '(NR == 1)')
-CUSTOM_THROUGHPUT__VMS=$(grep -Po '"median":.*?[^\\]",' /root/nodes_build\-$BUILD\-$DATE.html | sed 's/\,\ \"unit\"\:\ \"Mbit\/s\"\,$//' | grep -Eo "[0-9]*" | awk '(NR == 1)')
-CUSTOM_STDEV_NODES=$(grep -Po '"median":.*?[^\\]",' /root/VMs_build\-$BUILD\-$DATE.html | sed 's/\,\ \"unit\"\:\ \"Mbit\/s\"\,$//' | grep -Eo "[0-9]*" | awk '(NR == 3)')
+CUSTOM_THROUGHPUT__VMS=$(grep -Po '"median":.*?[^\\]",' /root/VMs_build\-$BUILD\-$DATE.html | sed 's/\,\ \"unit\"\:\ \"Mbit\/s\"\,$//' | grep -Eo "[0-9]*" | awk '(NR == 1)')
+CUSTOM_STDEV_NODES=$(grep -Po '"median":.*?[^\\]",' /root/nodes_build\-$BUILD\-$DATE.html | sed 's/\,\ \"unit\"\:\ \"Mbit\/s\"\,$//' | grep -Eo "[0-9]*" | awk '(NR == 3)')
 CUSTOM_STDEV_VMS=$(grep -Po '"median":.*?[^\\]",' /root/VMs_build\-$BUILD\-$DATE.html | sed 's/\,\ \"unit\"\:\ \"Mbit\/s\"\,$//' | grep -Eo "[0-9]*" | awk '(NR == 3)')
 curl -H "Content-Type: application/json" -u "sgudz@mirantis.com:Kew4SZEQ" "https://mirantis.testrail.com/index.php?/api/v2/get_cases/3&suite_id=1752" > cases.json
 echo "1. Custom throughput nodes $CUSTOM_THROUGHPUT_NODES"
