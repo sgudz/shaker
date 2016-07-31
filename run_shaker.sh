@@ -29,15 +29,14 @@ ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT}" <<EOF
 #set -x
 
 ######## Changing OPENRC if need ################
-NEED="export OS_AUTH_URL='http://192.168.0.2:5000/v2.0/'"
-EXIST=`awk '(NR == 7)' openrc`
-if [[ ${NEED} != ${EXIST} ]]; then
-sed -i 's/5000\//5000\/v2.0\//g' openrc
-fi
+#NEED="export OS_AUTH_URL='http://192.168.0.2:5000/v2.0/'"
+#EXIST=`awk '(NR == 7)' openrc`
+#if [[ ${NEED} != ${EXIST} ]]; then
+#sed -i 's/5000\//5000\/v2.0\//g' openrc
+#fi
 
 source /root/openrc
 SERVER_ENDPOINT=$CONTROLLER_PUBLIC_IP
-echo "SERVER_ENDPOINT: \$SERVER_ENDPOINT:\$SERVER_PORT"
 printf 'deb http://ua.archive.ubuntu.com/ubuntu/ trusty universe' > /etc/apt/sources.list
 apt-get update
 apt-get -y install iperf python-dev libzmq-dev python-pip && pip install pbr pyshaker
