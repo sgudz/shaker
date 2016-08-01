@@ -116,20 +116,10 @@ done
 
 ############################## Runing scenarios ##############################################################################################
 
-echo "Run scenarios for VMs"
-REMOTE_SCRIPT3=`ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "mktemp"`
-ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT3}" <<EOF
-#set -x
-source /root/openrc
-SERVER_ENDPOINT=$CONTROLLER_PUBLIC_IP
-SERVER_PORT=18000
-shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT --scenario /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/VMs.yaml --report VMs_$DATE.html --debug
-EOF
-ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT3}"
-
-echo "Run scenarios for Nodes"
-REMOTE_SCRIPT4=`ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "mktemp"`
-ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT4}" <<EOF
+if $BETWEEN_NODES;then
+	echo "Run scenarios for Nodes"
+	REMOTE_SCRIPT4=`ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "mktemp"`
+	ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT4}" <<EOF
 #set -x
 source /root/openrc
 SERVER_ENDPOINT=$CONTROLLER_PUBLIC_IP
@@ -137,8 +127,19 @@ SERVER_PORT2=19000
 echo "SERVER_ENDPOINT: \$SERVER_ENDPOINT:\$SERVER_PORT"
 shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT2 --scenario /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml --report nodes_$DATE.html --debug
 EOF
-ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT4}"
-
+	ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT4}"
+else
+	echo "Run scenarios for VMs"
+	REMOTE_SCRIPT3=`ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "mktemp"`
+	ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT3}" <<EOF
+#set -x
+source /root/openrc
+SERVER_ENDPOINT=$CONTROLLER_PUBLIC_IP
+SERVER_PORT=18000
+shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT --scenario /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/VMs.yaml --report VMs_$DATE.html --debug
+EOF
+	ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT3}"
+fi
 #################### Cleaning after nodes testing ########################################
 for proc in ${COMPUTE_IP_ARRAY[@]};do
 	ssh ${SSH_OPTS} $proc "ps -ef | grep iperf | awk '{print \$2}' | xargs kill"
