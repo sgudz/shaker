@@ -11,6 +11,10 @@ curl -s 'http://172.16.44.5/for_workarounds/shaker_scenario_for_perf_labs/VMs.ya
 ######### Get cases JSON data from suite ##################
 curl -H "Content-Type: application/json" -u "sgudz@mirantis.com:Kew4SZEQ" "https://mirantis.testrail.com/index.php?/api/v2/get_cases/3&suite_id=$SUITE_ID" > cases.json
 cat cases.json
+
+if $CREATE_NEW_RUN;then
+  curl -H "Content-Type: application/json" -u "sgudz@mirantis.com:Kew4SZEQ" -d '{"suite_id": $SUITE_ID,"name": "to_delete3","assignedto_id": 89,"include_all": true}' "https://mirantis.testrail.com/index.php?/api/v2/add_run/3"
+
 export SSH_OPTS='-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=quiet'
 CONTROLLER_ADMIN_IP=`fuel node | grep controller | awk -F "|" '{print $5}' | sed 's/ //g'`
 
