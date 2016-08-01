@@ -45,15 +45,15 @@ ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT}" <<EOF
 source /root/openrc
 SERVER_ENDPOINT=$CONTROLLER_PUBLIC_IP
 printf 'deb http://ua.archive.ubuntu.com/ubuntu/ trusty universe' > /etc/apt/sources.list
-#apt-get update
-#apt-get -y install iperf python-dev libzmq-dev python-pip && pip install pbr pyshaker
+apt-get update
+apt-get -y install iperf python-dev libzmq-dev python-pip && pip install pbr pyshaker
 
 iptables -I INPUT -s 10.20.0.0/16 -j ACCEPT
 iptables -I INPUT -s 10.0.0.0/16 -j ACCEPT
 iptables -I INPUT -s 172.16.0.0/16 -j ACCEPT
 iptables -I INPUT -s 192.168.0.0/16 -j ACCEPT
 
-#shaker-image-builder --flavor-vcpu 8 --flavor-ram 4096 --flavor-disk 55 --debug
+shaker-image-builder --flavor-vcpu 8 --flavor-ram 4096 --flavor-disk 55 --debug
 
 #Copy orig traffic.py
 cp /usr/local/lib/python2.7/dist-packages/shaker/engine/aggregators/traffic.py /usr/local/lib/python2.7/dist-packages/shaker/engine/aggregators/traffic.py.orig
