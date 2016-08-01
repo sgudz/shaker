@@ -36,12 +36,6 @@ REMOTE_SCRIPT=`ssh $CONTROLLER_ADMIN_IP "mktemp"`
 ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT}" <<EOF
 #set -x
 
-# ######## Changing OPENRC if need ################
-# NEED="export OS_AUTH_URL='http://192.168.0.2:5000/v2.0/'"
-# EXIST=`awk '(NR == 7)' openrc`
-# if [[ ${NEED} != ${EXIST} ]]; then
-# sed -i 's/5000\//5000\/v2.0\//g' openrc
-# fi
 source /root/openrc
 SERVER_ENDPOINT=$CONTROLLER_PUBLIC_IP
 printf 'deb http://ua.archive.ubuntu.com/ubuntu/ trusty universe' > /etc/apt/sources.list
@@ -68,6 +62,7 @@ scp VMs.yaml $CONTROLLER_ADMIN_IP:/usr/local/lib/python2.7/dist-packages/shaker/
 scp traffic.py $CONTROLLER_ADMIN_IP:/usr/local/lib/python2.7/dist-packages/shaker/engine/aggregators/traffic.py
 ##################################### Install Shaker on computes #########################################################################
 sleep 5
+if $BETWEEN_NODES;then
 echo "Install Shaker on Computes and launch local agents"
 cnt="1"
 for item in ${COMPUTE_IP_ARRAY[@]};do
@@ -116,10 +111,9 @@ done
 
 ############################## Runing scenarios ##############################################################################################
 
-if $BETWEEN_NODES;then
-	echo "Run scenarios for Nodes"
-	REMOTE_SCRIPT4=`ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "mktemp"`
-	ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT4}" <<EOF
+echo "Run scenarios for Nodes"
+REMOTE_SCRIPT4=`ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "mktemp"`
+ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT4}" <<EOF
 #set -x
 source /root/openrc
 SERVER_ENDPOINT=$CONTROLLER_PUBLIC_IP
@@ -127,7 +121,7 @@ SERVER_PORT2=19000
 echo "SERVER_ENDPOINT: \$SERVER_ENDPOINT:\$SERVER_PORT"
 shaker --server-endpoint \$SERVER_ENDPOINT:\$SERVER_PORT2 --scenario /usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/nodes.yaml --report nodes_$DATE.html --debug
 EOF
-	ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT4}"
+ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT4}"
 else
 	echo "Run scenarios for VMs"
 	REMOTE_SCRIPT3=`ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "mktemp"`
