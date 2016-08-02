@@ -5,7 +5,7 @@
 export DATE=`date +%Y-%m-%d_%H:%M`
 
 if $CREATE_NEW_RUN;then
-	curl -H "Content-Type: application/json" -u "sgudz@mirantis.com:Kew4SZEQ" -d '{"suite_id": '$SUITE_ID',"name": "to_delete4","assignedto_id": 89,"include_all": true}' "https://mirantis.testrail.com/index.php?/api/v2/add_run/3" > run_data.json
+	curl -H "Content-Type: application/json" -u "sgudz@mirantis.com:Kew4SZEQ" -d '{"suite_id": '$SUITE_ID',"name": "to_delete6","assignedto_id": 89,"include_all": true}' "https://mirantis.testrail.com/index.php?/api/v2/add_run/3" > run_data.json
 	RUN_ID=$(grep -Po '"id":.*?[^\\]"' run_data.json | grep -Po "[0-9]*")
 fi
 ########################## Get tests from RUN ###############################
@@ -183,4 +183,8 @@ echo "1. Custom throughput nodes $CUSTOM_THROUGHPUT_NODES"
 echo "2. Custom throughput VMs $CUSTOM_THROUGHPUT_VMS"
 echo "3. Custom stdev nodes $CUSTOM_STDEV_NODES"
 echo "4. Custom stdev VMs $CUSTOM_STDEV_VMS"
+
+############ Posting results ###################
+curl -H "Content-Type: application/json" -u "sgudz@mirantis.com:Kew4SZEQ" -d '{ "status_id":1,"version":"RC2","custom_throughput":'$CUSTOM_THROUGHPUT_VMS',"custom_stdev":'$CUSTOM_STDEV_VMS'}' "https://mirantis.testrail.com/index.php?/api/v2/add_result/$TEST_ID"
+
 echo "Done."
