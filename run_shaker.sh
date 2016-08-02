@@ -4,6 +4,30 @@
 #This script tests "storage" network for test between nodes. You can change network by replacing NETWORK parameter(to do).
 export DATE=`date +%Y-%m-%d_%H:%M`
 
+if $CREATE_NEW_RUN;then
+	curl -H "Content-Type: application/json" -u "sgudz@mirantis.com:Kew4SZEQ" -d '{"suite_id": '$SUITE_ID',"name": "to_delete4","assignedto_id": 89,"include_all": true}' "https://mirantis.testrail.com/index.php?/api/v2/add_run/3"
+
+
+################## Define test case from testrail #######################
+if $DVR && $VXLAN && $OFFLOADING;then
+        echo "Third case"
+elif $DVR && $VLAN && $OFFLOADING;then
+        echo "Fourth case"
+elif $DVR && $VXLAN;then
+        echo "First case"
+elif $DVR && $VLAN;then
+        echo "Second case"
+elif $L3HA && $VXLAN && $OFFLOADING && $BETWEEN_NODES;then
+        echo "Fivth case"
+elif $L3HA && $VXLAN && $OFFLOADING;then
+        echo "Sixth case"
+elif $L3HA && $VLAN && $OFFLOADING && $BETWEEN_NODES;then
+        echo "Seventh case"
+elif $L3HA && $VLAN && $OFFLOADING;then
+        echo "Eights case"
+
+fi
+
 ####################### Catching scenarios ##############################################################################################
 curl -s 'http://172.16.44.5/for_workarounds/shaker_scenario_for_perf_labs/nodes.yaml' > nodes.yaml
 curl -s 'http://172.16.44.5/for_workarounds/shaker_scenario_for_perf_labs/VMs.yaml' > VMs.yaml
