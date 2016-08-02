@@ -8,11 +8,11 @@ if $CREATE_NEW_RUN;then
 	curl -H "Content-Type: application/json" -u "sgudz@mirantis.com:Kew4SZEQ" -d '{"suite_id": '$SUITE_ID',"name": '${RUN_NAME}',"assignedto_id": 89,"include_all": true}' "https://mirantis.testrail.com/index.php?/api/v2/add_run/3" > run_data.json
 	RUN_ID=$(grep -Po '"id":.*?[^\\]"' run_data.json | grep -Po "[0-9]*")
 fi
-############################# Get tests from RUN ###############################
+############################## Get tests from RUN ####################################
 curl -H "Content-Type: application/json" -u "sgudz@mirantis.com:Kew4SZEQ" "https://mirantis.testrail.com/index.php?/api/v2/get_tests/$RUN_ID" > tests_$RUN_ID.json
 TESTS_IDS=$(grep -Po '"id":.*?[^\\]"' tests_$RUN_ID.json | grep -Po "[0-9]*")
 
-################## Define test case from testrail ########################
+############################## Define test case from testrail ########################
 if $DVR && $VXLAN && $OFFLOADING;then
 	TEST_ID=$(echo ${TESTS_IDS} | tr " " "\n" | awk '(NR == 3)')
 elif $DVR && $VLAN && $OFFLOADING;then
@@ -35,11 +35,11 @@ else
 
 fi
 echo "TEST ID IS $TEST_ID"
-####################### Catching scenarios ##############################################################################################
+####################### Catching scenarios #############################################
 curl -s 'http://172.16.44.5/for_workarounds/shaker_scenario_for_perf_labs/nodes.yaml' > nodes.yaml
 curl -s 'http://172.16.44.5/for_workarounds/shaker_scenario_for_perf_labs/VMs.yaml' > VMs.yaml
 
-######### Get cases JSON data from suite ##################
+#################### Get cases JSON data from suite #####################################
 curl -H "Content-Type: application/json" -u "sgudz@mirantis.com:Kew4SZEQ" "https://mirantis.testrail.com/index.php?/api/v2/get_cases/3&suite_id=$SUITE_ID" > cases.json
 cat cases.json
 
@@ -53,15 +53,15 @@ CONTROLLER_ADMIN_IP=`fuel node | grep controller | awk -F "|" '{print $5}' | sed
 export CONTROLLER_PUBLIC_IP=$(ssh ${CONTROLLER_ADMIN_IP} "ifconfig | grep br-ex -A 1 | grep inet | awk ' {print \$2}' | sed 's/addr://g'")
 echo "Controller Public IP: $CONTROLLER_PUBLIC_IP"
 
-#Define 2 computes IPs for testing between nodes
+################### Define 2 computes IPs for testing between nodes ####################
 COMPUTE_IP_ARRAY=`fuel node | awk -F "|" '/compute/ {print $5}' | sed 's/ //g' | head -n 2`
 echo "Compute IPs:"
 for i in ${COMPUTE_IP_ARRAY[@]};do echo $i;done
 
-# Update traffic.py file to have stdev and median values in the report
+########### Update traffic.py file to have stdev and median values in the report ########
 curl -s 'https://raw.githubusercontent.com/vortex610/shaker/master/traffic.py' > traffic.py
 
-##################################### Run Shaker on Controller ########################################################################
+##################################### Run Shaker on Controller ##########################
 echo "Install Shaker on Controller"
 REMOTE_SCRIPT=`ssh $CONTROLLER_ADMIN_IP "mktemp"`
 ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "cat > ${REMOTE_SCRIPT}" <<EOF
@@ -86,12 +86,12 @@ EOF
 #Run script on remote node
 ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "bash ${REMOTE_SCRIPT}"
 
-##################################### Copying scenarios to right directory ##############################################################
+##################################### Copying scenarios to right directory ###############
 echo "Copying required files to specific directories"
 scp nodes.yaml $CONTROLLER_ADMIN_IP:/usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/
 scp VMs.yaml $CONTROLLER_ADMIN_IP:/usr/local/lib/python2.7/dist-packages/shaker/scenarios/openstack/
 scp traffic.py $CONTROLLER_ADMIN_IP:/usr/local/lib/python2.7/dist-packages/shaker/engine/aggregators/traffic.py
-##################################### Install Shaker on computes #########################################################################
+##################################### Install Shaker on computes #########################
 sleep 5
 if $BETWEEN_NODES;then
 echo "Install Shaker on Computes and launch local agents"
@@ -114,7 +114,7 @@ EOF
 	ssh ${SSH_OPTS} $item "screen -dmS shaker-agent-screen shaker-agent --server-endpoint=$CONTROLLER_ADMIN_IP:19000 --agent-id=$agent_id"
 	cat ${REMOTE_SCRIPT2}
 
-################################## Changing test files for agent and IP's roles ############################################################
+################################## Changing test files for agent and IP's roles ############
 
 	if test $agent_id == "a-001";then
 		role="master"
@@ -133,14 +133,14 @@ EOF
 	fi
 	echo "$agent_id launched. IP is $ip. Role is $role"
 
-################################ If slave - launch iperf server ##############################################################################
+################################ If slave - launch iperf server ############################
 
 	ssh ${SSH_OPTS} $item "screen -dmS iperf-screen iperf -s"
 	cnt=$[cnt+1]
 	sleep 2
 done
 
-############################## Runing scenarios ##############################################################################################
+############################## Runing scenarios ############################################
 
 echo "Run scenarios for Nodes"
 REMOTE_SCRIPT4=`ssh ${SSH_OPTS} $CONTROLLER_ADMIN_IP "mktemp"`
@@ -184,7 +184,7 @@ echo "2. Custom throughput VMs $CUSTOM_THROUGHPUT_VMS"
 echo "3. Custom stdev nodes $CUSTOM_STDEV_NODES"
 echo "4. Custom stdev VMs $CUSTOM_STDEV_VMS"
 
-############ Posting results ###################
+################################  Posting results #########################################
 curl -H "Content-Type: application/json" -u "sgudz@mirantis.com:Kew4SZEQ" -d '{ "status_id":1,"version":"RC2","custom_throughput":'$CUSTOM_THROUGHPUT_VMS',"custom_stdev":'$CUSTOM_STDEV_VMS'}' "https://mirantis.testrail.com/index.php?/api/v2/add_result/$TEST_ID"
 
 echo "Done."
