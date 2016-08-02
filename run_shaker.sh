@@ -34,7 +34,7 @@ else
 	exit 1
 
 fi
-
+echo "TEST ID IS $TEST_ID"
 ####################### Catching scenarios ##############################################################################################
 curl -s 'http://172.16.44.5/for_workarounds/shaker_scenario_for_perf_labs/nodes.yaml' > nodes.yaml
 curl -s 'http://172.16.44.5/for_workarounds/shaker_scenario_for_perf_labs/VMs.yaml' > VMs.yaml
