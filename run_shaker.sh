@@ -12,7 +12,7 @@ fi
 curl -H "Content-Type: application/json" -u "sgudz@mirantis.com:Kew4SZEQ" "https://mirantis.testrail.com/index.php?/api/v2/get_tests/$RUN_ID" > tests_$RUN_ID.json
 TESTS_IDS=$(grep -Po '"id":.*?[^\\]"' tests_$RUN_ID.json | grep -Po "[0-9]*")
 
-################## Define test case from testrail #######################
+################## Define test case from testrail ########################
 if $DVR && $VXLAN && $OFFLOADING;then
 	TEST_ID=$(echo ${TESTS_IDS} | tr " " "\n" | awk '(NR == 3)')
 elif $DVR && $VLAN && $OFFLOADING;then
