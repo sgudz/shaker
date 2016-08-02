@@ -5,26 +5,33 @@
 export DATE=`date +%Y-%m-%d_%H:%M`
 
 if $CREATE_NEW_RUN;then
-	curl -H "Content-Type: application/json" -u "sgudz@mirantis.com:Kew4SZEQ" -d '{"suite_id": '$SUITE_ID',"name": "to_delete4","assignedto_id": 89,"include_all": true}' "https://mirantis.testrail.com/index.php?/api/v2/add_run/3"
+	curl -H "Content-Type: application/json" -u "sgudz@mirantis.com:Kew4SZEQ" -d '{"suite_id": '$SUITE_ID',"name": "to_delete4","assignedto_id": 89,"include_all": true}' "https://mirantis.testrail.com/index.php?/api/v2/add_run/3" > run_data.json
+	RUN_ID=$(grep -Po '"id":.*?[^\\]"' run_data.json | grep -Po "[0-9]*")
 
+########################## Get tests from RUN ###############################
+curl -H "Content-Type: application/json" -u "sgudz@mirantis.com:Kew4SZEQ" "https://mirantis.testrail.com/index.php?/api/v2/get_tests/$RUN_ID" > tests_$RUN_ID.json
+TESTS_IDS=$(grep -Po '"id":.*?[^\\]"' tests_$RUN_ID.json | grep -Po "[0-9]*")
 
 ################## Define test case from testrail #######################
 if $DVR && $VXLAN && $OFFLOADING;then
-        echo "Third case"
+	TEST_ID=$(echo ${TEST_IDS} | tr " " "\n" | awk '(NR == 3)')
 elif $DVR && $VLAN && $OFFLOADING;then
-        echo "Fourth case"
+        TEST_ID=$(echo ${TEST_IDS} | tr " " "\n" | awk '(NR == 4)')
 elif $DVR && $VXLAN;then
-        echo "First case"
+        TEST_ID=$(echo ${TEST_IDS} | tr " " "\n" | awk '(NR == 1)')
 elif $DVR && $VLAN;then
-        echo "Second case"
+        TEST_ID=$(echo ${TEST_IDS} | tr " " "\n" | awk '(NR == 2)')
 elif $L3HA && $VXLAN && $OFFLOADING && $BETWEEN_NODES;then
-        echo "Fivth case"
+        TEST_ID=$(echo ${TEST_IDS} | tr " " "\n" | awk '(NR == 5)')
 elif $L3HA && $VXLAN && $OFFLOADING;then
-        echo "Sixth case"
+        TEST_ID=$(echo ${TEST_IDS} | tr " " "\n" | awk '(NR == 6)')
 elif $L3HA && $VLAN && $OFFLOADING && $BETWEEN_NODES;then
-        echo "Seventh case"
+        TEST_ID=$(echo ${TEST_IDS} | tr " " "\n" | awk '(NR == 7)')
 elif $L3HA && $VLAN && $OFFLOADING;then
-        echo "Eights case"
+        TEST_ID=$(echo ${TEST_IDS} | tr " " "\n" | awk '(NR == 8)')
+else
+	echo "Wrong configuration for test"
+	exit 1
 
 fi
 
