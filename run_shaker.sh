@@ -14,21 +14,21 @@ TESTS_IDS=$(grep -Po '"id":.*?[^\\]"' tests_$RUN_ID.json | grep -Po "[0-9]*")
 
 ################## Define test case from testrail #######################
 if $DVR && $VXLAN && $OFFLOADING;then
-	TEST_ID=$(echo ${TEST_IDS} | tr " " "\n" | awk '(NR == 3)')
+	TEST_ID=$(echo ${TESTS_IDS} | tr " " "\n" | awk '(NR == 3)')
 elif $DVR && $VLAN && $OFFLOADING;then
-        TEST_ID=$(echo ${TEST_IDS} | tr " " "\n" | awk '(NR == 4)')
+        TEST_ID=$(echo ${TESTS_IDS} | tr " " "\n" | awk '(NR == 4)')
 elif $DVR && $VXLAN;then
-        TEST_ID=$(echo ${TEST_IDS} | tr " " "\n" | awk '(NR == 1)')
+        TEST_ID=$(echo ${TESTS_IDS} | tr " " "\n" | awk '(NR == 1)')
 elif $DVR && $VLAN;then
-        TEST_ID=$(echo ${TEST_IDS} | tr " " "\n" | awk '(NR == 2)')
+        TEST_ID=$(echo ${TESTS_IDS} | tr " " "\n" | awk '(NR == 2)')
 elif $L3HA && $VXLAN && $OFFLOADING && $BETWEEN_NODES;then
-        TEST_ID=$(echo ${TEST_IDS} | tr " " "\n" | awk '(NR == 5)')
+        TEST_ID=$(echo ${TESTS_IDS} | tr " " "\n" | awk '(NR == 5)')
 elif $L3HA && $VXLAN && $OFFLOADING;then
-        TEST_ID=$(echo ${TEST_IDS} | tr " " "\n" | awk '(NR == 6)')
+        TEST_ID=$(echo ${TESTS_IDS} | tr " " "\n" | awk '(NR == 6)')
 elif $L3HA && $VLAN && $OFFLOADING && $BETWEEN_NODES;then
-        TEST_ID=$(echo ${TEST_IDS} | tr " " "\n" | awk '(NR == 7)')
+        TEST_ID=$(echo ${TESTS_IDS} | tr " " "\n" | awk '(NR == 7)')
 elif $L3HA && $VLAN && $OFFLOADING;then
-        TEST_ID=$(echo ${TEST_IDS} | tr " " "\n" | awk '(NR == 8)')
+        TEST_ID=$(echo ${TESTS_IDS} | tr " " "\n" | awk '(NR == 8)')
 else
 	echo "Wrong configuration for test"
 	exit 1
