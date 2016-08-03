@@ -10,6 +10,14 @@ echo $TOKEN_ID
 curl -s -X GET -H "Accept: application/json" -H "Content-Type: application/json" -H "X-Auth-Token: $TOKEN_ID" "http://$FUEL_IP:8000/api/clusters/50/network_configuration/neutron" > neutron.json
 SEG_TYPE=$(grep -Po '"segmentation_type":.*?[^\\]"}' neutron.json | awk '{print $2}' | grep -Eo "[a-Z]*")
 echo "SEG Type $SEG_TYPE"
+VLAN="true"
+if [[ "$SEG_TYPE" == "tun" ]];then
+        VXLAN="true"
+        VLAN="false"
+fi
+echo $VXLAN
+echo $VLAN
+
 # if $CREATE_NEW_RUN;then
 # 	curl -H "Content-Type: application/json" -u "sgudz@mirantis.com:Kew4SZEQ" -d '{"suite_id": '$SUITE_ID',"name": "'${RUN_NAME}'","assignedto_id": 89,"include_all": true}' "https://mirantis.testrail.com/index.php?/api/v2/add_run/3" > run_data.json
 # 	RUN_ID=$(grep -Po '"id":.*?[^\\]"' run_data.json | grep -Po "[0-9]*")
