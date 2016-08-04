@@ -4,6 +4,12 @@
 #This script tests "storage" network for test between nodes. You can change network by replacing NETWORK parameter(to do).
 export DATE=`date +%Y-%m-%d_%H:%M`
 ################# Get token #############################
+
+cat << EOF > cluster.cfg
+[fuel_ip]
+fuel_ip = $FUEL_IP
+EOF
+
 curl -s -X POST http://$FUEL_IP:5000/v2.0/tokens -H "Accept: application/json" -H "Content-Type: application/json" -d '{"auth": {"tenantName": "admin", "passwordCredentials": {"username": "admin", "password": "admin"}}}' > token.json
 TOKEN_ID=$(grep -Po '"id":.*?[^\\]",' token.json | grep -Eo "[0-9a-Z]*" | awk '(NR == 2)')
 echo $TOKEN_ID
