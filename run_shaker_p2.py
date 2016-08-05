@@ -134,11 +134,12 @@ done
 
 ########################## Copying reports to Fuel master node ###########################
 export BUILD=`cat /etc/fuel_build_id`
-scp $CONTROLLER_ADMIN_IP:/root/VMs_$DATE.html /root/VMs_build\-$BUILD\-$DATE.html
-scp $CONTROLLER_ADMIN_IP:/root/nodes_$DATE.html /root/nodes_build\-$BUILD\-$DATE.html
 if $BETWEEN_NODES;then
-  JSON_DATA=$(cat /root/nodes_build\-$BUILD\-$DATE.html | grep -P "var report" | sed 's/    var report = //g' | sed 's/\;$//g')
+        scp $CONTROLLER_ADMIN_IP:/root/nodes_$DATE.html /root/nodes_build\-$BUILD\-$DATE.html
+        JSON_DATA=$(cat /root/nodes_build\-$BUILD\-$DATE.html | grep -P "var report" | sed 's/    var report = //g' | sed 's/\;$//g')
 else
-  JSON_DATA_NODES=$(cat /root/VMs_build\-$BUILD\-$DATE.html | grep -P "var report" | sed 's/    var report = //g' | sed 's/\;$//g')
+        scp $CONTROLLER_ADMIN_IP:/root/VMs_$DATE.html /root/VMs_build\-$BUILD\-$DATE.html
+        JSON_DATA=$(cat /root/VMs_build\-$BUILD\-$DATE.html | grep -P "var report" | sed 's/    var report = //g' | sed 's/\;$//g')
+fi
 echo $JSON_DATA > report.json
 echo "Done."
