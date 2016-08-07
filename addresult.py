@@ -1,4 +1,4 @@
-from fuelapi import *
+from plugins.FuelTestrailAPI import *
 
 median = 0
 stdev = 0
