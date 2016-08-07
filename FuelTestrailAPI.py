@@ -3,10 +3,10 @@ import base64
 import json
 import urllib2
 
-interface = "bond0"
 parser = ConfigParser.SafeConfigParser()
 parser.read('/root/env.conf')
 fuel_ip = dict(parser.items('fuel'))['fuel_ip']
+interface = dict(parser.items('fuel'))['interface']
 create_new_run = dict(parser.items('testrail'))['create_new_run']
 suite_id = dict(parser.items('testrail'))['suite_id']
 cluster_id = dict(parser.items('fuel'))['cluster_id']
