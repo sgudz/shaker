@@ -142,4 +142,6 @@ else
         JSON_DATA=$(cat /root/VMs_build\-$BUILD\-$DATE.html | grep -P "var report" | sed 's/    var report = //g' | sed 's/\;$//g')
 fi
 echo $JSON_DATA > report.json
+
+python testrail.py
 echo "Done."
