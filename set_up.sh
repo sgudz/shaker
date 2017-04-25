@@ -1,3 +1,5 @@
+nodes=`fuel node | grep "10\." | cut -d "|" -f5`
+
 for item in $nodes; do
   ifaces=`ssh -q $item ip link list | grep " en" | awk '{print $2}' | sed 's/\://g'`
 for int in $ifaces;do
